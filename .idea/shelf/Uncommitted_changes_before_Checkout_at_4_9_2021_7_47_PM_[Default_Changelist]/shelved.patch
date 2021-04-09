@@ -1,0 +1,1201 @@
+Index: src/AI.java
+===================================================================
+diff --git a/src/AI.java b/src/AI.java
+deleted file mode 100644
+--- a/src/AI.java	(revision 14702b5c146200db080bee25789496b20e7b28aa)
++++ /dev/null	(revision 14702b5c146200db080bee25789496b20e7b28aa)
+@@ -1,7 +0,0 @@
+-public class AI {
+-//NOT YET USED
+-//easy - will make losing moves
+-//medium - will try to make a tictactoe
+-//hard - will block other player's tictactoe
+-//stupid - will make random moves (easiest to code)
+-}
+\ No newline at end of file
+Index: src/Game.java
+===================================================================
+diff --git a/src/Game.java b/src/Game.java
+deleted file mode 100644
+--- a/src/Game.java	(revision 14702b5c146200db080bee25789496b20e7b28aa)
++++ /dev/null	(revision 14702b5c146200db080bee25789496b20e7b28aa)
+@@ -1,246 +0,0 @@
+-public class Game {
+-
+-  //This is the Game class.  It hold the current state of the game
+-  //with the help of the Cell class.
+-  
+-  public boolean finished = false;
+-  public boolean draw = false;
+-  public int gridSize;
+-  
+-  private Cell[] grid;
+-  
+-  //constructor.  takes integer and generates a new Game with given size
+-  public Game(int size) {
+-  
+-    this.gridSize = size;
+-    grid = new Cell[gridSize * gridSize];
+-    
+-    for (int i = 0; i < grid.length; i++) {
+-      grid[i] = new Cell();
+-    }
+-  }
+-  
+-  //checks to see if a win condition has been met and
+-  //outputs the current game map to the console 
+-  public String output() {
+-    checkForTicTacToe();
+-    return drawMap();
+-  }
+-  
+-  //places an X or an O in a cell ont he game map
+-  public boolean setCell(int index){
+-  
+-    if (grid[index].empty) {
+-    
+-      grid[index].placeMark();
+-      return true;
+-      
+-    } else {
+-      return false;
+-    }
+-  }
+-  
+-  //checks to see if a win condition has been met
+-  private boolean checkForTicTacToe() {
+-  
+-    boolean gridFilled;
+-    boolean rowWin;
+-    boolean columnWin;
+-    boolean diagonalWin;
+-    
+-    Cell[][] rows = new Cell[gridSize][gridSize];
+-    Cell[][] columns = new Cell[gridSize][gridSize];
+-    Cell[][] diagonals = new Cell[2][gridSize]; //there are only ever two diagonals which complete a tictactoe in a square
+-    
+-    //if every cell is filled, end the game
+-    gridFilled = true;
+-    for(int i = 0; i < gridSize * gridSize; i++){
+-    
+-      if(grid[i].empty){
+-        gridFilled = false;
+-      }
+-    }
+-    
+-    if(gridFilled){
+-      finished = true;
+-      draw = true;
+-    }
+-    
+-    for(int i = 0; i < gridSize; i++){
+-      for(int j = 0; j < gridSize; j++){
+-      
+-        rows[i][j] = grid[gridSize*i+j];
+-      }
+-    }
+-    
+-    for(int i = 0; i < gridSize; i++){
+-      for(int j = 0; j < gridSize; j++){
+-      
+-        columns[i][j] = grid[i+gridSize*j];
+-      }
+-    }
+-    
+-    for(int i = 0; i < 2; i++){
+-      if(i == 0){
+-        for(int j = 0; j < gridSize; j++){
+-        
+-          diagonals[i][j] = grid[(gridSize + 1) * j];
+-          
+-        }
+-      } else {
+-        for(int j = 0; j < gridSize; j++){
+-        
+-          diagonals[i][j] = grid[(gridSize - 1) * (j + 1)];
+-        }
+-      }
+-    }
+-    
+-    //if a row has all the same content and isnt empty
+-    //then the game is over
+-    for (Cell[] row : rows) {
+-    
+-      //if the row elements are all the same and not empty
+-      //set finished to true
+-      rowWin = true;
+-      for(int i = 0; i < row.length - 1; i++) {
+-        if(row[i].output()!=row[i + 1].output()){
+-        
+-          rowWin = false;
+-        }
+-        for(int j = 0; j < row.length - 1; j++){
+-          if(row[i].empty){
+-          
+-            rowWin = false;
+-          }
+-        }
+-      }
+-      
+-      if(rowWin){
+-        finished = true;
+-        draw = false;
+-      }
+-    }
+-    
+-    //if a column has all the same content and isnt empty
+-    //then the game is over
+-    for (Cell[] column : columns) {
+-    
+-      //if the column elements are all the same and not empty
+-      //set finished to true
+-      columnWin = true;
+-      for(int i = 0; i < column.length - 1; i++) {
+-        if(column[i].output()!=column[i + 1].output()) {
+-        
+-          columnWin = false;
+-        }
+-        
+-        for(int j = 0; j < column.length - 1; j++) {
+-          if(column[i].empty){
+-          
+-            columnWin = false;
+-          }
+-        }
+-      }
+-      
+-      if(columnWin){
+-        finished = true;
+-        draw = false;
+-      }
+-    }
+-    
+-    //if a diagonal has all the same content and isnt empty
+-    //then the game is over
+-    for (Cell[] diagonal : diagonals) {
+-    
+-      //if the diagonal elements are all the same and not empty
+-      //set finished to true
+-      
+-      diagonalWin = true;
+-      for(int i = 0; i < diagonal.length - 1; i++) {
+-        if(diagonal[i].output()!=diagonal[i + 1].output()) {
+-        
+-          diagonalWin = false;
+-        }
+-        
+-        for(int j = 0; j < diagonal.length - 1; j++) {
+-          if(diagonal[i].empty){
+-          
+-            diagonalWin = false;
+-          }
+-        }
+-      }
+-      
+-      if(diagonalWin){
+-        finished = true;
+-        draw = false;
+-      }
+-    }
+-    
+-    return finished;
+-  }
+-  
+-  //draws the current game state in perfect proportion
+-  //
+-  private String drawMap() {
+-  
+-  String top = "\t\t  ";
+-  String fill = "\t\t    ";
+-  String divider = "\t\t ---";
+-  String meat = "\t\t";
+-  String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+-  String map = "\n";
+-  
+-    for(int i = 1; i < gridSize; i++) {
+-    
+-      top += i + "  ";
+-      
+-      if(i<9){
+-        top += " ";
+-      }
+-      
+-      fill += "|   ";
+-      divider += "+---";
+-    }
+-    
+-    top += gridSize + " \n";
+-    fill += "\n";
+-    divider += "\n";
+-    map += top + fill;
+-    
+-    for(int row = 1; row < 2; row++){
+-      for(int column = 1; column < 2; column++){
+-      
+-        meat += alphabet.substring(row - 1, row) + " " + grid[3 * (row - 1) + (column - 1)].output();
+-        
+-        for(int i = 2; i < gridSize + 1; i++){
+-        
+-          meat += " | " + grid[3 * (row - 1) + (i - 1)].output();
+-        }
+-      }
+-      
+-      meat += "\n";
+-    }
+-    
+-    map += meat + fill;
+-    
+-    for (int row = 2; row < gridSize + 1; row++){
+-    
+-      map += divider;
+-      map += fill;
+-      
+-      for(int column = 1; column < 2; column++){
+-      
+-        meat = "\t\t" + alphabet.substring(row - 1, row) + " " + grid[gridSize * (row - 1) + (column - 1)].output();
+-        
+-        for(int i = column + 1; i < gridSize + 1; i++){
+-        
+-          meat += " | " + grid[gridSize * (row - 1) + (i - 1)].output();
+-        }
+-      }
+-      
+-      map += meat + "\n" + fill;
+-    }
+-    
+-    return map;
+-  }
+-}
+\ No newline at end of file
+Index: src/Player.java
+===================================================================
+diff --git a/src/Player.java b/src/Player.java
+deleted file mode 100644
+--- a/src/Player.java	(revision 14702b5c146200db080bee25789496b20e7b28aa)
++++ /dev/null	(revision 14702b5c146200db080bee25789496b20e7b28aa)
+@@ -1,133 +0,0 @@
+-public class Player {
+-
+-  //player makes moves and can be human or AI
+-  
+-  private String type; // whether the player is human or AI
+-  private int index;
+-  private int column;
+-  private int row;
+-  private boolean turn; //whether or not it's the player's turn
+-  
+-  //constructor.  requires string to set player type
+-  public Player(String type){
+-  
+-    this.type = type;
+-  }
+-  
+-  //player "goes" while it's their turn
+-  public void go(){
+-  
+-    turn = true;
+-    
+-    // if AI, do computery things
+-    if(type=="AI"){
+-    
+-      //let user know that AI is going
+-      System.out.print("\tThe computer will now make a move..");
+-      delay(1000, TicTacToe.game.gridSize); //take a second to go to make it appear as if computer is thinking
+-      
+-      while(turn){
+-        //AI selects a random empty cell and places corrosponding mark
+-        index = (int)Math.round((TicTacToe.game.gridSize*TicTacToe.game.gridSize-1)*Math.random());
+-        move(index, TicTacToe.game);
+-      }
+-      
+-    } else {
+-      //if human, do human stuff
+-      
+-      System.out.println("\tPlease place an X on the grid.  You can");
+-      TicTacToe.user_input = TicTacToe.getInput("\tdo this by typing 1A, 1B, 1C, 2A, etc.: ");
+-
+-      //while it's the player's turn...
+-      while(turn) {
+-      
+-        //validate user input
+-        if(valid_input(TicTacToe.user_input)){
+-        
+-          if(TicTacToe.user_input.length()==2){
+-          
+-            column = Integer.parseInt(TicTacToe.user_input.substring(0,1));
+-            row = letterToNumber(TicTacToe.user_input.substring(1,2));
+-            
+-          } else {
+-          
+-            column = Integer.parseInt(TicTacToe.user_input.substring(0,2));
+-            row = letterToNumber(TicTacToe.user_input.substring(2,3));
+-            
+-          }
+-          
+-          index = TicTacToe.game.gridSize*(row-1)+(column-1);
+-          
+-          if(index > (TicTacToe.game.gridSize*TicTacToe.game.gridSize)-1 || index < 0){
+-          
+-            TicTacToe.user_input = TicTacToe.getInput("That's not a valid spot!  Please choose another spot: ");
+-          } else {
+-          
+-            //if valid input, and cell isn't taken already,
+-            //place mark in selected cell and end turn
+-            move(index, TicTacToe.game);
+-            
+-            if(turn){
+-            
+-              TicTacToe.user_input = TicTacToe.getInput("That space is already in play!  Please choose another spot: ");
+-            }
+-            
+-          }
+-          
+-        } else {
+-        
+-          TicTacToe.user_input = TicTacToe.getInput("That's not valid input.  Please choose another spot: ");
+-        }
+-      }
+-    }
+-  }
+-  
+-  //encapsulated code for user input validation
+-  //it checks to make sure the input was two or three characters long,
+-  //and that it contained one or two digits, followed by one lower
+-  //case or upper case letter
+-  private static boolean valid_input(String user_input) {
+-  
+-    boolean output = false;
+-    
+-    if(user_input.length() == 2){
+-    
+-      output = (user_input.substring(0,1).matches("[0-9]") && user_input.substring(1,2).matches("[a-zA-Z]"));
+-    } else if (user_input.length() == 3) {
+-    
+-      output = (user_input.substring(0,2).matches("[1-2][0-9]") && user_input.substring(2,3).matches("[a-zA-Z]"));
+-      
+-      if(Integer.parseInt(user_input.substring(0,2))>TicTacToe.game.gridSize){
+-        output = false;
+-      }
+-    }
+-    
+-    return output;
+-  }
+-
+-  //player places mark
+-  private void move(int index, Game game) {
+-  
+-    if(TicTacToe.game.setCell(index)){
+-      turn = false;
+-    }
+-  }
+-  
+-  //encapsulated code for AI delay behavior
+-  private static void delay(int amount, int gameSize) {
+-  
+-    try {
+-    
+-      Thread.sleep(amount*3/(gameSize*gameSize));
+-      
+-    } catch(InterruptedException ex) {
+-    
+-      Thread.currentThread().interrupt();
+-    }
+-  }
+-  
+-  //converts the letter input for row/column selection into a usable number
+-  private static int letterToNumber(String str) {
+-    return ("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".indexOf(str))%26+1;
+-  }
+-}
+\ No newline at end of file
+Index: src/TicTacToe.java
+===================================================================
+diff --git a/src/TicTacToe.java b/src/TicTacToe.java
+deleted file mode 100644
+--- a/src/TicTacToe.java	(revision 14702b5c146200db080bee25789496b20e7b28aa)
++++ /dev/null	(revision 14702b5c146200db080bee25789496b20e7b28aa)
+@@ -1,167 +0,0 @@
+-/*
+- * Write a tic-tac-toe program where a human user
+- * can play against  an AI bot, and where two  AI 
+- * bots can play against each other.  Write input
+- * and output code so that it's intuitive for the 
+- * user.
+- */
+-
+-import java.io.*;
+-import java.util.ArrayList;
+-import java.util.Random;
+-import java.util.regex.*;
+-
+-public class TicTacToe {
+-
+-  public static Game game;
+-  public static int count = 0;
+-  public static String user_input;
+-  
+-  private static int gameMode;
+-  private static boolean valid_input;
+-  
+-  public static void main(String[] args){
+-  
+-    int gameSize;
+-    int minimumGameSize = 1;
+-    int maximumGameSize = 26;
+-  
+-    //When program starts, user is met with a welcome message
+-    System.out.println("\n\tمرحبا بكم في لعبة اكس او\"");
+-    System.out.println("\n\tPlease select your Game mode.");
+-    System.out.println("\n\t    (1) Human vs. Computer");
+-    System.out.println("\n\t    (2) Computer vs. Computer");
+-    user_input = getInput("\n\tWhich mode would you like to play? (1/2): ");
+-    
+-    //Keep asking for an answer from the user until we get a 1 or a 2
+-    gameMode(user_input); //gameMode() is defines below
+-    
+-    System.out.println("\n\tHow large of a grid would you like to use? ");
+-    user_input = getInput("\n\tPlease enter an integer between " + minimumGameSize + " and " + maximumGameSize + ": ");
+-    
+-    //validate user unput for game size
+-    valid_input = false;
+-    while(!valid_input){
+-    
+-      if( user_input.length() > 0 && (user_input.substring(0, 1).matches("[1-9]")) && (minimumGameSize <= Integer.parseInt(user_input)) && (Integer.parseInt(user_input) <= maximumGameSize) ){
+-      
+-        valid_input = true;
+-        
+-      } else {
+-      
+-        user_input = getInput("\n\tYou must enter a number between " + minimumGameSize + " and " + maximumGameSize + ": ");
+-        
+-      }
+-    }
+-    
+-    //issue warning for game sizes larger than 15
+-    if(Integer.parseInt(user_input) > 15){
+-    
+-      System.out.println("\n\t!!WARNING!!\n\t!!WARNING!!  Games large than 15 will not display correctly if console width is restricted to 80 col (neither will this message)\n\t!!WARNING!!");
+-      getInput("");
+-      
+-    }
+-    
+-    gameSize = Integer.parseInt(user_input);
+-    
+-    //Create a new Game instance
+-    game = new Game(gameSize);
+-    
+-    //create an array of two players
+-    Player[] players = new Player[2];
+-    
+-    //set players to AI or Human depending on game mode
+-    if(gameMode==1){
+-    
+-      players[0] = new Player("Human");
+-      players[1] = new Player("AI");
+-      
+-    } else {
+-    
+-      players[0] = new Player("AI");
+-      players[1] = new Player("AI");
+-      
+-    }
+-    
+-    //Draw the blank board initially to show user which columns and rows to choose from
+-    System.out.println(game.output());
+-    
+-    //until the game is over, go back and forth between players in players array
+-    //output the game map to the screen after each move
+-    while (!game.finished) {
+-    
+-      for(Player player : players){
+-      
+-        player.go();
+-        System.out.println("\n" + game.output());
+-        count += 1;
+-        
+-        if(game.finished){
+-          break;
+-        }
+-        
+-      }
+-    }
+-    
+-    //output an ending message to the game
+-    if (game.draw) {
+-    
+-      System.out.println("\n\tCat's game!");
+-      
+-    } else {
+-    
+-      //count variable from earlier is used to decide who went last and therefore won.
+-      if(count%2==1){
+-      
+-        System.out.println("\n\tX's win!");
+-        
+-      } else {
+-      
+-        System.out.println("\n\tO's win!");
+-        
+-      }
+-    }
+-  }
+-  
+-  //encapsulated code for input stream buffer
+-  public static String getInput(String prompt) {
+-  
+-    BufferedReader stdin = new BufferedReader( new InputStreamReader(System.in));
+-    
+-    System.out.print(prompt);
+-    System.out.flush();
+-    
+-    try {
+-    
+-      return stdin.readLine();
+-      
+-    } catch (Exception e) {
+-    
+-      return "Error: " + e.getMessage();
+-      
+-    }
+-  }
+-  
+-  //validates user input and sets the game mode
+-  private static void gameMode(String user_input) {
+-    
+-    valid_input = false;
+-    
+-    while(!valid_input){
+-    
+-      if((user_input.length() == 1) && (user_input.substring(0,1).matches("[1-2]"))){
+-      
+-        valid_input = true;
+-        
+-      } else {
+-      
+-        user_input = getInput("\n\tYou must enter '1' or '2' for the game mode: ");
+-        
+-      }
+-    }
+-    
+-    //Set user input to gameMode for use later
+-    gameMode = Integer.parseInt(user_input);
+-    
+-  }
+-}
+\ No newline at end of file
+Index: src/Cell.java
+===================================================================
+diff --git a/src/Cell.java b/src/Cell.java
+deleted file mode 100644
+--- a/src/Cell.java	(revision 14702b5c146200db080bee25789496b20e7b28aa)
++++ /dev/null	(revision 14702b5c146200db080bee25789496b20e7b28aa)
+@@ -1,29 +0,0 @@
+-public class Cell {
+-
+-  //This is one cell of the game grid
+-  
+-  public String contents;
+-  public boolean empty;
+-  
+-  public Cell() {
+-  
+-    this.contents = " ";
+-    this.empty = true;
+-  }
+-  
+-  public String output() {
+-  
+-    return this.contents;
+-  }
+-  
+-  public void placeMark() {
+-  
+-    if(TicTacToe.count%2==0){
+-      this.contents = "X";
+-    } else {
+-      this.contents = "O";
+-    }
+-    
+-    this.empty = false;
+-  }
+-}
+\ No newline at end of file
+Index: Java-TicTacToe.iml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<module type=\"JAVA_MODULE\" version=\"4\">\r\n  <component name=\"NewModuleRootManager\" inherit-compiler-output=\"true\">\r\n    <exclude-output />\r\n    <content url=\"file://$MODULE_DIR$\">\r\n      <sourceFolder url=\"file://$MODULE_DIR$/src\" isTestSource=\"false\" />\r\n    </content>\r\n    <orderEntry type=\"inheritedJdk\" />\r\n    <orderEntry type=\"sourceFolder\" forTests=\"false\" />\r\n  </component>\r\n</module>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Java-TicTacToe.iml b/Java-TicTacToe.iml
+--- a/Java-TicTacToe.iml	(revision 14702b5c146200db080bee25789496b20e7b28aa)
++++ b/Java-TicTacToe.iml	(date 1617986625567)
+@@ -7,5 +7,6 @@
+     </content>
+     <orderEntry type="inheritedJdk" />
+     <orderEntry type="sourceFolder" forTests="false" />
++    <orderEntry type="library" name="KotlinJavaRuntime" level="project" />
+   </component>
+ </module>
+\ No newline at end of file
+Index: .idea/libraries/KotlinJavaRuntime.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/libraries/KotlinJavaRuntime.xml b/.idea/libraries/KotlinJavaRuntime.xml
+new file mode 100644
+--- /dev/null	(date 1617986625598)
++++ b/.idea/libraries/KotlinJavaRuntime.xml	(date 1617986625598)
+@@ -0,0 +1,19 @@
++<component name="libraryTable">
++  <library name="KotlinJavaRuntime">
++    <CLASSES>
++      <root url="jar://$PROJECT_DIR$/lib/kotlin-stdlib.jar!/" />
++      <root url="jar://$PROJECT_DIR$/lib/kotlin-reflect.jar!/" />
++      <root url="jar://$PROJECT_DIR$/lib/kotlin-test.jar!/" />
++      <root url="jar://$PROJECT_DIR$/lib/kotlin-stdlib-jdk7.jar!/" />
++      <root url="jar://$PROJECT_DIR$/lib/kotlin-stdlib-jdk8.jar!/" />
++    </CLASSES>
++    <JAVADOC />
++    <SOURCES>
++      <root url="jar://$PROJECT_DIR$/lib/kotlin-stdlib-sources.jar!/" />
++      <root url="jar://$PROJECT_DIR$/lib/kotlin-reflect-sources.jar!/" />
++      <root url="jar://$PROJECT_DIR$/lib/kotlin-test-sources.jar!/" />
++      <root url="jar://$PROJECT_DIR$/lib/kotlin-stdlib-jdk7-sources.jar!/" />
++      <root url="jar://$PROJECT_DIR$/lib/kotlin-stdlib-jdk8-sources.jar!/" />
++    </SOURCES>
++  </library>
++</component>
+\ No newline at end of file
+Index: src/TicTacToe.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/TicTacToe.kt b/src/TicTacToe.kt
+new file mode 100644
+--- /dev/null	(date 1617986722570)
++++ b/src/TicTacToe.kt	(date 1617986722570)
+@@ -0,0 +1,123 @@
++import java.lang.InterruptedException
++import kotlin.jvm.JvmStatic
++import java.io.BufferedReader
++import java.io.InputStreamReader
++import java.lang.Exception
++
++object TicTacToe {
++    var game: Game? = null
++    var count = 0
++    var user_input: String? = null
++    private var gameMode = 0
++    private var valid_input = false
++    @JvmStatic
++    fun main(args: Array<String>) {
++        val gameSize: Int
++        val minimumGameSize = 1
++        val maximumGameSize = 26
++
++        //When program starts, user is met with a welcome message
++        println("\n\t X O مرحبا بكم في لعبة")
++        println("\n\tPlease select your Game mode.")
++        println("\n\t    (1) Human vs. Computer")
++        println("\n\t    (2) Computer vs. Computer")
++        user_input = getInput("\n\tWhich mode would you like to play? (1/2): ")
++
++        //Keep asking for an answer from the user until we get a 1 or a 2
++        gameMode(user_input) //gameMode() is defines below
++        println("\n\tHow large of a grid would you like to use? ")
++        user_input = getInput("\n\tPlease enter an integer between $minimumGameSize and $maximumGameSize: ")
++
++        //validate user unput for game size
++        valid_input = false
++        while (!valid_input) {
++            if (user_input!!.length > 0 && user_input!!.substring(0, 1).matches("[1-9]") && minimumGameSize <= user_input!!.toInt() && user_input!!.toInt() <= maximumGameSize) {
++                valid_input = true
++            } else {
++                user_input = getInput("\n\tYou must enter a number between $minimumGameSize and $maximumGameSize: ")
++            }
++        }
++
++        //issue warning for game sizes larger than 15
++        if (user_input!!.toInt() > 15) {
++            println("\n\t!!WARNING!!\n\t!!WARNING!!  Games large than 15 will not display correctly if console width is restricted to 80 col (neither will this message)\n\t!!WARNING!!")
++            getInput("")
++        }
++        gameSize = user_input!!.toInt()
++
++        //Create a new Game instance
++        game = Game(gameSize)
++
++        //create an array of two players
++        val players = arrayOfNulls<Player>(2)
++
++        //set players to AI or Human depending on game mode
++        if (gameMode == 1) {
++            players[0] = Player("Human")
++            players[1] = Player("AI")
++        } else {
++            players[0] = Player("AI")
++            players[1] = Player("AI")
++        }
++
++        //Draw the blank board initially to show user which columns and rows to choose from
++        println(game!!.output())
++
++        //until the game is over, go back and forth between players in players array
++        //output the game map to the screen after each move
++        while (!game!!.finished) {
++            for (player in players) {
++                player!!.go()
++                println("""
++    
++    ${game!!.output()}
++    """.trimIndent())
++                count += 1
++                if (game!!.finished) {
++                    break
++                }
++            }
++        }
++
++        //output an ending message to the game
++        if (game!!.draw) {
++            println("\n\tCat's game!")
++        } else {
++
++            //count variable from earlier is used to decide who went last and therefore won.
++            if (count % 2 == 1) {
++                println("\n\tX's win!")
++            } else {
++                println("\n\tO's win!")
++            }
++        }
++    }
++
++    //encapsulated code for input stream buffer
++    fun getInput(prompt: String?): String {
++        val stdin = BufferedReader(InputStreamReader(System.`in`))
++        print(prompt)
++        System.out.flush()
++        return try {
++            stdin.readLine()
++        } catch (e: Exception) {
++            "Error: " + e.message
++        }
++    }
++
++    //validates user input and sets the game mode
++    private fun gameMode(user_input: String?) {
++        var user_input = user_input
++        valid_input = false
++        while (!valid_input) {
++            if (user_input!!.length == 1 && user_input.substring(0, 1).matches("[1-2]")) {
++                valid_input = true
++            } else {
++                user_input = getInput("\n\tYou must enter '1' or '2' for the game mode: ")
++            }
++        }
++
++        //Set user input to gameMode for use later
++        gameMode = user_input!!.toInt()
++    }
++}
+\ No newline at end of file
+Index: .idea/kotlinc.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/kotlinc.xml b/.idea/kotlinc.xml
+new file mode 100644
+--- /dev/null	(date 1617986625611)
++++ b/.idea/kotlinc.xml	(date 1617986625611)
+@@ -0,0 +1,6 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="Kotlin2JvmCompilerArguments">
++    <option name="jvmTarget" value="1.8" />
++  </component>
++</project>
+\ No newline at end of file
+Index: src/Game.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/Game.kt b/src/Game.kt
+new file mode 100644
+--- /dev/null	(date 1617986722539)
++++ b/src/Game.kt	(date 1617986722539)
+@@ -0,0 +1,200 @@
++import java.lang.InterruptedException
++import kotlin.jvm.JvmStatic
++import java.io.BufferedReader
++import java.io.InputStreamReader
++import java.lang.Exception
++
++class Game(var gridSize: Int) {
++    //This is the Game class.  It hold the current state of the game
++    //with the help of the Cell class.
++    var finished = false
++    var draw = false
++    private val grid: Array<Cell?>
++
++    //checks to see if a win condition has been met and
++    //outputs the current game map to the console 
++    fun output(): String {
++        checkForTicTacToe()
++        return drawMap()
++    }
++
++    //places an X or an O in a cell ont he game map
++    fun setCell(index: Int): Boolean {
++        return if (grid[index]!!.empty) {
++            grid[index]!!.placeMark()
++            true
++        } else {
++            false
++        }
++    }
++
++    //checks to see if a win condition has been met
++    private fun checkForTicTacToe(): Boolean {
++        var gridFilled: Boolean
++        var rowWin: Boolean
++        var columnWin: Boolean
++        var diagonalWin: Boolean
++        val rows = Array(gridSize) { arrayOfNulls<Cell>(gridSize) }
++        val columns = Array(gridSize) { arrayOfNulls<Cell>(gridSize) }
++        val diagonals = Array(2) { arrayOfNulls<Cell>(gridSize) } //there are only ever two diagonals which complete a tictactoe in a square
++
++        //if every cell is filled, end the game
++        gridFilled = true
++        for (i in 0 until gridSize * gridSize) {
++            if (grid[i]!!.empty) {
++                gridFilled = false
++            }
++        }
++        if (gridFilled) {
++            finished = true
++            draw = true
++        }
++        for (i in 0 until gridSize) {
++            for (j in 0 until gridSize) {
++                rows[i][j] = grid[gridSize * i + j]
++            }
++        }
++        for (i in 0 until gridSize) {
++            for (j in 0 until gridSize) {
++                columns[i][j] = grid[i + gridSize * j]
++            }
++        }
++        for (i in 0..1) {
++            if (i == 0) {
++                for (j in 0 until gridSize) {
++                    diagonals[i][j] = grid[(gridSize + 1) * j]
++                }
++            } else {
++                for (j in 0 until gridSize) {
++                    diagonals[i][j] = grid[(gridSize - 1) * (j + 1)]
++                }
++            }
++        }
++
++        //if a row has all the same content and isnt empty
++        //then the game is over
++        for (row in rows) {
++
++            //if the row elements are all the same and not empty
++            //set finished to true
++            rowWin = true
++            for (i in 0 until row.size - 1) {
++                if (row[i]!!.output() !== row[i + 1]!!.output()) {
++                    rowWin = false
++                }
++                for (j in 0 until row.size - 1) {
++                    if (row[i]!!.empty) {
++                        rowWin = false
++                    }
++                }
++            }
++            if (rowWin) {
++                finished = true
++                draw = false
++            }
++        }
++
++        //if a column has all the same content and isnt empty
++        //then the game is over
++        for (column in columns) {
++
++            //if the column elements are all the same and not empty
++            //set finished to true
++            columnWin = true
++            for (i in 0 until column.size - 1) {
++                if (column[i]!!.output() !== column[i + 1]!!.output()) {
++                    columnWin = false
++                }
++                for (j in 0 until column.size - 1) {
++                    if (column[i]!!.empty) {
++                        columnWin = false
++                    }
++                }
++            }
++            if (columnWin) {
++                finished = true
++                draw = false
++            }
++        }
++
++        //if a diagonal has all the same content and isnt empty
++        //then the game is over
++        for (diagonal in diagonals) {
++
++            //if the diagonal elements are all the same and not empty
++            //set finished to true
++            diagonalWin = true
++            for (i in 0 until diagonal.size - 1) {
++                if (diagonal[i]!!.output() !== diagonal[i + 1]!!.output()) {
++                    diagonalWin = false
++                }
++                for (j in 0 until diagonal.size - 1) {
++                    if (diagonal[i]!!.empty) {
++                        diagonalWin = false
++                    }
++                }
++            }
++            if (diagonalWin) {
++                finished = true
++                draw = false
++            }
++        }
++        return finished
++    }
++
++    //draws the current game state in perfect proportion
++    //
++    private fun drawMap(): String {
++        var top = "\t\t  "
++        var fill = "\t\t    "
++        var divider = "\t\t ---"
++        var meat = "\t\t"
++        val alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
++        var map = "\n"
++        for (i in 1 until gridSize) {
++            top += "$i  "
++            if (i < 9) {
++                top += " "
++            }
++            fill += "|   "
++            divider += "+---"
++        }
++        top += "$gridSize \n"
++        fill += "\n"
++        divider += "\n"
++        map += top + fill
++        for (row in 1..1) {
++            for (column in 1..1) {
++                meat += alphabet.substring(row - 1, row) + " " + grid[3 * (row - 1) + (column - 1)]!!.output()
++                for (i in 2 until gridSize + 1) {
++                    meat += " | " + grid[3 * (row - 1) + (i - 1)]!!.output()
++                }
++            }
++            meat += "\n"
++        }
++        map += meat + fill
++        for (row in 2 until gridSize + 1) {
++            map += divider
++            map += fill
++            for (column in 1..1) {
++                meat = "\t\t" + alphabet.substring(row - 1, row) + " " + grid[gridSize * (row - 1) + (column - 1)]!!.output()
++                for (i in column + 1 until gridSize + 1) {
++                    meat += " | " + grid[gridSize * (row - 1) + (i - 1)]!!.output()
++                }
++            }
++            map += """
++                $meat
++                $fill
++                """.trimIndent()
++        }
++        return map
++    }
++
++    //constructor.  takes integer and generates a new Game with given size
++    init {
++        grid = arrayOfNulls(gridSize * gridSize)
++        for (i in grid.indices) {
++            grid[i] = Cell()
++        }
++    }
++}
+\ No newline at end of file
+Index: src/Player.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/Player.kt b/src/Player.kt
+new file mode 100644
+--- /dev/null	(date 1617986722554)
++++ b/src/Player.kt	(date 1617986722554)
+@@ -0,0 +1,107 @@
++import java.lang.InterruptedException
++import kotlin.jvm.JvmStatic
++import java.io.BufferedReader
++import java.io.InputStreamReader
++import java.lang.Exception
++
++class Player     //constructor.  requires string to set player type
++(  //player makes moves and can be human or AI
++        private val type // whether the player is human or AI
++        : String) {
++    private var index = 0
++    private var column = 0
++    private var row = 0
++    private var turn //whether or not it's the player's turn
++            = false
++
++    //player "goes" while it's their turn
++    fun go() {
++        turn = true
++
++        // if AI, do computery things
++        if (type === "AI") {
++
++            //let user know that AI is going
++            print("\tThe computer will now make a move..")
++            delay(1000, TicTacToe.game!!.gridSize) //take a second to go to make it appear as if computer is thinking
++            while (turn) {
++                //AI selects a random empty cell and places corrosponding mark
++                index = Math.round((TicTacToe.game!!.gridSize * TicTacToe.game!!.gridSize - 1) * Math.random()).toInt()
++                move(index, TicTacToe.game)
++            }
++        } else {
++            //if human, do human stuff
++            println("\tPlease place an X on the grid.  You can")
++            TicTacToe.user_input = TicTacToe.getInput("\tdo this by typing 1A, 1B, 1C, 2A, etc.: ")
++
++            //while it's the player's turn...
++            while (turn) {
++
++                //validate user input
++                if (valid_input(TicTacToe.user_input)) {
++                    if (TicTacToe.user_input!!.length == 2) {
++                        column = TicTacToe.user_input!!.substring(0, 1).toInt()
++                        row = letterToNumber(TicTacToe.user_input!!.substring(1, 2))
++                    } else {
++                        column = TicTacToe.user_input!!.substring(0, 2).toInt()
++                        row = letterToNumber(TicTacToe.user_input!!.substring(2, 3))
++                    }
++                    index = TicTacToe.game!!.gridSize * (row - 1) + (column - 1)
++                    if (index > TicTacToe.game!!.gridSize * TicTacToe.game!!.gridSize - 1 || index < 0) {
++                        TicTacToe.user_input = TicTacToe.getInput("That's not a valid spot!  Please choose another spot: ")
++                    } else {
++
++                        //if valid input, and cell isn't taken already,
++                        //place mark in selected cell and end turn
++                        move(index, TicTacToe.game)
++                        if (turn) {
++                            TicTacToe.user_input = TicTacToe.getInput("That space is already in play!  Please choose another spot: ")
++                        }
++                    }
++                } else {
++                    TicTacToe.user_input = TicTacToe.getInput("That's not valid input.  Please choose another spot: ")
++                }
++            }
++        }
++    }
++
++    //player places mark
++    private fun move(index: Int, game: Game?) {
++        if (TicTacToe.game!!.setCell(index)) {
++            turn = false
++        }
++    }
++
++    companion object {
++        //encapsulated code for user input validation
++        //it checks to make sure the input was two or three characters long,
++        //and that it contained one or two digits, followed by one lower
++        //case or upper case letter
++        private fun valid_input(user_input: String?): Boolean {
++            var output = false
++            if (user_input!!.length == 2) {
++                output = user_input.substring(0, 1).matches("[0-9]") && user_input.substring(1, 2).matches("[a-zA-Z]")
++            } else if (user_input.length == 3) {
++                output = user_input.substring(0, 2).matches("[1-2][0-9]") && user_input.substring(2, 3).matches("[a-zA-Z]")
++                if (user_input.substring(0, 2).toInt() > TicTacToe.game!!.gridSize) {
++                    output = false
++                }
++            }
++            return output
++        }
++
++        //encapsulated code for AI delay behavior
++        private fun delay(amount: Int, gameSize: Int) {
++            try {
++                Thread.sleep((amount * 3 / (gameSize * gameSize)).toLong())
++            } catch (ex: InterruptedException) {
++                Thread.currentThread().interrupt()
++            }
++        }
++
++        //converts the letter input for row/column selection into a usable number
++        private fun letterToNumber(str: String): Int {
++            return "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".indexOf(str) % 26 + 1
++        }
++    }
++}
+\ No newline at end of file
+Index: src/Cell.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/Cell.kt b/src/Cell.kt
+new file mode 100644
+--- /dev/null	(date 1617986722519)
++++ b/src/Cell.kt	(date 1617986722519)
+@@ -0,0 +1,23 @@
++import java.lang.InterruptedException
++import kotlin.jvm.JvmStatic
++import java.io.BufferedReader
++import java.io.InputStreamReader
++import java.lang.Exception
++
++class Cell {
++    //This is one cell of the game grid
++    var contents = " "
++    var empty = true
++    fun output(): String {
++        return contents
++    }
++
++    fun placeMark() {
++        if (TicTacToe.count % 2 == 0) {
++            contents = "X"
++        } else {
++            contents = "O"
++        }
++        empty = false
++    }
++}
+\ No newline at end of file
+Index: src/AI.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/AI.kt b/src/AI.kt
+new file mode 100644
+--- /dev/null	(date 1617986722461)
++++ b/src/AI.kt	(date 1617986722461)
+@@ -0,0 +1,6 @@
++class AI { //NOT YET USED
++    //easy - will make losing moves
++    //medium - will try to make a tictactoe
++    //hard - will block other player's tictactoe
++    //stupid - will make random moves (easiest to code)
++}
+\ No newline at end of file

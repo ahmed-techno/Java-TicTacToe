@@ -1,0 +1,29 @@
+<changelist name="Uncommitted_changes_before_Checkout_at_4_9_2021_7_47_PM_[Default_Changelist]" date="1617986887888" recycled="true" deleted="true">
+  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_4_9_2021_7_47_PM_[Default_Changelist]/shelved.patch" />
+  <option name="DESCRIPTION" value="Uncommitted changes before Checkout at 4/9/2021 7:47 PM [Default Changelist]" />
+  <binary>
+    <option name="BEFORE_PATH" value="out/production/Java-TicTacToe/Game.class" />
+    <option name="AFTER_PATH" />
+    <option name="SHELVED_PATH" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="out/production/Java-TicTacToe/Player.class" />
+    <option name="AFTER_PATH" />
+    <option name="SHELVED_PATH" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="out/production/Java-TicTacToe/Cell.class" />
+    <option name="AFTER_PATH" />
+    <option name="SHELVED_PATH" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="out/production/Java-TicTacToe/AI.class" />
+    <option name="AFTER_PATH" />
+    <option name="SHELVED_PATH" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="out/production/Java-TicTacToe/language.class" />
+    <option name="AFTER_PATH" value="out/production/Java-TicTacToe/language.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_4_9_2021_7_47_PM_[Default_Changelist]/language.class" />
+  </binary>
+</changelist>
