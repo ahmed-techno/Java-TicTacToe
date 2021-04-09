@@ -74,9 +74,9 @@ class Player     //constructor.  requires string to set player type
         private fun valid_input(user_input: String?): Boolean {
             var output = false
             if (user_input!!.length() === 2) {
-                output = user_input.substring(0, 1).matches("[0-9]") && user_input.substring(1, 2).matches("[a-zA-Z]")
+                output = user_input.substring(0, 1).matches(Regex(String())) && user_input.substring(1, 2).matches(Regex(String()))
             } else if (user_input!!.length() === 3) {
-                output = user_input.substring(0, 2).matches("[1-2][0-9]") && user_input.substring(2, 3).matches("[a-zA-Z]")
+                user_input.substring(0, 2).matches(Regex(String())) && user_input.substring(2, 3).matches(Regex(String()))
                 if (Integer.parseInt(user_input.substring(0, 2)) > TicTacToe.game!!.gridSize) {
                     output = false
                 }

@@ -12,8 +12,8 @@ object TicTacToe {
     private var valid_input = false
     fun main(args: Array<String?>?) {
         val gameSize: Int
-        val minimumGameSize = 1
-        val maximumGameSize = 26
+        val minimumGameSize :Int = 1
+        val maximumGameSize :Int = 26
 
         //When program starts, user is met with a welcome message
         System.out.println("\n\tمرحبا بكم في لعبة اكس او\"")
