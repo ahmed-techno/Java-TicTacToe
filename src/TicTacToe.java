@@ -27,7 +27,7 @@ public class TicTacToe {
     int maximumGameSize = 26;
   
     //When program starts, user is met with a welcome message
-    System.out.println("\n\tWelcome to this wonderful and lovely game of TicTacToe.");
+    System.out.println("\n\tمرحبا بكم في لعبة اكس او\"");
     System.out.println("\n\tPlease select your Game mode.");
     System.out.println("\n\t    (1) Human vs. Computer");
     System.out.println("\n\t    (2) Computer vs. Computer");
